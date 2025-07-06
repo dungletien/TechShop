@@ -49,4 +49,4 @@ Ecommerce App là một ứng dụng web thương mại điện tử được x�
   ```
   
 ## Demo
-- Link: https://tech-shop-iijze3nr9-le-dungs-projects-893d400e.vercel.app
+- Link: https://tech-shop-chi.vercel.app
