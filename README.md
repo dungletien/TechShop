@@ -10,6 +10,14 @@ Ecommerce App là một ứng dụng web thương mại điện tử được x�
 - Tailwind CSS
 - React Hooks (useState, useEffect, useContext)
 
+## Tính năng chính
+- Hiển thị sản phẩm mới, bán chạy, khuyến mãi
+- Lọc sản phẩm theo danh mục, thương hiệu, tính năng, giá, đánh giá
+- Thêm/xóa/sửa giỏ hàng, tính tổng, thanh toán
+- Xem chi tiết sản phẩm với tab mô tả, thông số, đánh giá, hỏi đáp
+- Hỗ trợ chat trực tuyến và nút cuộn lên đầu trang
+- Giao diện Admin: quản lý Dashboard, sản phẩm, đơn hàng, khách hàng, báo cáo, cài đặt
+
 ## Yêu cầu
 - Node.js >= 14
 - NPM >= 6 hoặc Yarn
@@ -39,14 +47,6 @@ Ecommerce App là một ứng dụng web thương mại điện tử được x�
   ```sh
   npm run build
   ```
-
-## Tính năng chính
-- Hiển thị sản phẩm mới, bán chạy, khuyến mãi
-- Lọc sản phẩm theo danh mục, thương hiệu, tính năng, giá, đánh giá
-- Thêm/xóa/sửa giỏ hàng, tính tổng, thanh toán
-- Xem chi tiết sản phẩm với tab mô tả, thông số, đánh giá, hỏi đáp
-- Hỗ trợ chat trực tuyến và nút cuộn lên đầu trang
-- Giao diện Admin: quản lý Dashboard, sản phẩm, đơn hàng, khách hàng, báo cáo, cài đặt
-
+  
 ## Demo
 - Link: https://tech-shop-iijze3nr9-le-dungs-projects-893d400e.vercel.app
