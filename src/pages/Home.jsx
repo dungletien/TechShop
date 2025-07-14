@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Badge} from "antd";
+import { Button, Badge } from "antd";
 import {
     ShoppingCartOutlined
 } from "@ant-design/icons";
@@ -277,7 +277,7 @@ const Home = ({
             </section>
 
             {/* Back to top button */}
-            <BackToTopButton/>
+            <BackToTopButton />
 
             {/* Chat support button */}
             <ChatSupport />

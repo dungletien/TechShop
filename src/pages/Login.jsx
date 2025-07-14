@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button} from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -11,8 +11,7 @@ const Login = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      message.success('Đăng nhập thành công!');
-      navigate('/');
+      navigate('/#');
     }, 1200);
   };
 
