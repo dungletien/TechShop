@@ -1,24 +1,13 @@
 import React, { useState } from 'react';
 import { useCart } from '../components/CartContext';
-import { Input, Button, Form, message, Divider, Empty } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Input, Button, Form, Divider, Empty } from 'antd';
+import { Link} from 'react-router-dom';
 
 const Checkout = () => {
-  const { cart, totalPrice, clearCart } = useCart();
-  const [loading, setLoading] = useState(false);
+  const { cart, totalPrice} = useCart();
+  const [loading] = useState(false);
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-
-  const handleFinish = (values) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      clearCart();
-      message.success('Đặt hàng thành công!');
-      navigate('/');
-    }, 1500);
-  };
-
+  
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -48,7 +37,7 @@ const Checkout = () => {
               <span className="text-2xl font-bold text-green-600">{totalPrice.toLocaleString()}₫</span>
             </div>
             <h2 className="text-lg font-semibold mb-4">Thông tin giao hàng</h2>
-            <Form layout="vertical" form={form} onFinish={handleFinish}>
+            <Form layout="vertical" form={form} >
               <Form.Item name="name" label="Họ và tên"> <Input placeholder="Nhập họ và tên" /> </Form.Item>
               <Form.Item name="phone" label="Số điện thoại"> <Input placeholder="Nhập số điện thoại" /> </Form.Item>
               <Form.Item name="address" label="Địa chỉ nhận hàng"> <Input placeholder="Nhập địa chỉ" /> </Form.Item>

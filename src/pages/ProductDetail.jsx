@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { StarFilled, LeftOutlined } from '@ant-design/icons';
 import BackToTopButton from '../components/BackToTopButton';
-import ChatSupportButton from '../components/ChatSupportButton';
-import ChatSupportDrawer from '../components/ChatSupportDrawer';
+import ChatSupport from '../components/ChatSupport';
 import { bestSellers, newProducts } from '../constants/products';
 import { useCart } from '../components/CartContext';
 
@@ -21,42 +20,20 @@ const ProductDetail = () => {
     { name: 'Xám', value: 'gray', color: 'bg-gray-400', image: product?.images?.[1] || product?.image },
     { name: 'Vàng', value: 'yellow', color: 'bg-yellow-300', image: product?.images?.[2] || product?.image },
   ]);
-  // Sản phẩm gợi ý: ưu tiên cùng category, sau đó cùng brand, sau đó random, tối đa 4 sản phẩm
-  let relatedProducts = allProducts.filter(p => product && p.category === product.category && p.id !== product.id);
-  if (relatedProducts.length < 4) {
-    // Bổ sung sản phẩm cùng brand (không trùng id, không trùng category đã có)
-    const brandProducts = allProducts.filter(p => p.brand === product.brand && p.id !== product.id && !relatedProducts.includes(p));
-    relatedProducts = [...relatedProducts, ...brandProducts];
-  }
-  if (relatedProducts.length < 4) {
-    // Bổ sung random sản phẩm khác (không trùng id, không trùng đã có)
-    const others = allProducts.filter(p => p.id !== product.id && !relatedProducts.includes(p));
-    // Shuffle
-    for (let i = others.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [others[i], others[j]] = [others[j], others[i]];
-    }
-    relatedProducts = [...relatedProducts, ...others];
-  }
-  relatedProducts = relatedProducts.slice(0, 4);
+
+  const otherProducts = useMemo(() => {
+    if (!product) return [];
+    const filteredProducts = allProducts.filter(p => p.id !== product.id);
+    const shuffled = [...filteredProducts].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4);
+  }, [product]);
 
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(capacityOptions[0]);
-  const [selectedImage, setSelectedImage] = useState(colorOptions[0]?.image);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [chatVisible, setChatVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(product?.image);
   const [tab, setTab] = useState('description');
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 300);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Sau khi gọi hooks, mới kiểm tra điều kiện
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -66,7 +43,6 @@ const ProductDetail = () => {
     );
   }
 
-  // Gallery images theo màu sắc
   const galleryImages = product.images && product.images.length > 0
     ? product.images
     : [product.image];
@@ -119,7 +95,7 @@ const ProductDetail = () => {
                   <span className="text-xs font-medium text-white bg-red-500 px-2 py-1 rounded-full">-{product.discount}%</span>
                 </div>
                 <div className="flex items-center mb-6">
-                  {[1,2,3,4,5].map(i => <StarFilled key={i} className={i <= Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-200'} />)}
+                  {[1, 2, 3, 4, 5].map(i => <StarFilled key={i} className={i <= Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-200'} />)}
                   <span className="ml-2 text-gray-600 text-base">{product.rating.toFixed(1)} <span className="text-sm">(99 đánh giá)</span></span>
                 </div>
                 {/* Tùy chọn cấu hình */}
@@ -144,7 +120,6 @@ const ProductDetail = () => {
                         className={`w-9 h-9 rounded-full border flex items-center justify-center transition ${selectedColor.value === color.value ? 'border-2 border-blue-500 ring-2 ring-blue-200' : 'border-gray-300 hover:border-blue-300'} ${color.color}`}
                         onClick={() => {
                           setSelectedColor(color);
-                          setSelectedImage(color.image);
                         }}
                         title={color.name}
                       />
@@ -167,14 +142,14 @@ const ProductDetail = () => {
       <div className="container mx-auto px-4 mt-12">
         <div className="bg-white rounded-xl shadow p-6">
           <div className="flex gap-6 border-b mb-6">
-            <button className={`pb-2 font-medium ${tab==='description' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={()=>setTab('description')}>Mô tả sản phẩm</button>
-            <button className={`pb-2 font-medium ${tab==='specs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={()=>setTab('specs')}>Thông số kỹ thuật</button>
-            <button className={`pb-2 font-medium ${tab==='reviews' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={()=>setTab('reviews')}>Đánh giá</button>
-            <button className={`pb-2 font-medium ${tab==='faq' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={()=>setTab('faq')}>Hỏi đáp</button>
-            <button className={`pb-2 font-medium ${tab==='warranty' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={()=>setTab('warranty')}>Bảo hành</button>
+            <button className={`pb-2 font-medium ${tab === 'description' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={() => setTab('description')}>Mô tả sản phẩm</button>
+            <button className={`pb-2 font-medium ${tab === 'specs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={() => setTab('specs')}>Thông số kỹ thuật</button>
+            <button className={`pb-2 font-medium ${tab === 'reviews' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={() => setTab('reviews')}>Đánh giá</button>
+            <button className={`pb-2 font-medium ${tab === 'faq' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={() => setTab('faq')}>Hỏi đáp</button>
+            <button className={`pb-2 font-medium ${tab === 'warranty' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`} onClick={() => setTab('warranty')}>Bảo hành</button>
           </div>
           <div>
-            {tab==='description' && (
+            {tab === 'description' && (
               <div className="text-gray-700 leading-relaxed space-y-4">
                 <p>
                   Sản phẩm thuộc dòng công nghệ cao cấp, thiết kế hiện đại, nhỏ gọn và tiện lợi, đáp ứng tốt nhu cầu học tập, làm việc và giải trí. Với cấu hình mạnh mẽ cùng nhiều tính năng thông minh, đây là lựa chọn lý tưởng cho người dùng cá nhân lẫn doanh nghiệp.
@@ -184,8 +159,8 @@ const ProductDetail = () => {
                 </p>
               </div>
             )}
-            {tab==='specs' && (
-            <div className="text-gray-700 leading-relaxed space-y-2">
+            {tab === 'specs' && (
+              <div className="text-gray-700 leading-relaxed space-y-2">
                 <p><strong>Màn hình:</strong> Công nghệ IPS / OLED / Retina, kích thước từ 6 đến 13 inch</p>
                 <p><strong>Chip xử lý:</strong> Đa nhân hiệu suất cao (Snapdragon / Apple / Intel / MediaTek)</p>
                 <p><strong>Bộ nhớ:</strong> RAM từ 4GB đến 16GB</p>
@@ -195,51 +170,51 @@ const ProductDetail = () => {
                 <p><strong>Hệ điều hành:</strong> Android / iOS / iPadOS / Windows</p>
                 <p><strong>Pin:</strong> Dung lượng cao, hỗ trợ sạc nhanh</p>
                 <p><strong>Khác:</strong> Bảo mật vân tay, nhận diện khuôn mặt, chống nước (IP67/IP68)</p>
-            </div>
+              </div>
             )}
-            {tab==='reviews' && (
-            <div className="space-y-6">
+            {tab === 'reviews' && (
+              <div className="space-y-6">
                 <div className="border-b pb-4">
-                <p className="font-semibold text-gray-800">Người dùng A</p>
-                <p className="text-yellow-400">★★★★★</p>
-                <p className="text-gray-600 text-sm mt-1">Sản phẩm chất lượng, xứng đáng với giá tiền. Hiệu suất mượt mà, thiết kế đẹp.</p>
+                  <p className="font-semibold text-gray-800">Người dùng A</p>
+                  <p className="text-yellow-400">★★★★★</p>
+                  <p className="text-gray-600 text-sm mt-1">Sản phẩm chất lượng, xứng đáng với giá tiền. Hiệu suất mượt mà, thiết kế đẹp.</p>
                 </div>
                 <div className="border-b pb-4">
-                <p className="font-semibold text-gray-800">Người dùng B</p>
-                <p className="text-yellow-400">★★★★☆</p>
-                <p className="text-gray-600 text-sm mt-1">Máy dùng ổn, pin bền, chỉ hơi nặng khi cầm lâu.</p>
+                  <p className="font-semibold text-gray-800">Người dùng B</p>
+                  <p className="text-yellow-400">★★★★☆</p>
+                  <p className="text-gray-600 text-sm mt-1">Máy dùng ổn, pin bền, chỉ hơi nặng khi cầm lâu.</p>
                 </div>
                 <div className="text-sm text-blue-600 hover:underline cursor-pointer">Xem thêm đánh giá</div>
-            </div>
+              </div>
             )}
-            {tab==='faq' && (
-            <div className="space-y-4 text-gray-700">
+            {tab === 'faq' && (
+              <div className="space-y-4 text-gray-700">
                 <div>
-                <p className="font-semibold">❓ Sản phẩm có bảo hành không?</p>
-                <p>Có. Sản phẩm được bảo hành chính hãng 12 tháng.</p>
+                  <p className="font-semibold">❓ Sản phẩm có bảo hành không?</p>
+                  <p>Có. Sản phẩm được bảo hành chính hãng 12 tháng.</p>
                 </div>
                 <div>
-                <p className="font-semibold">❓ Có hỗ trợ trả góp không?</p>
-                <p>Có hỗ trợ trả góp qua thẻ tín dụng và công ty tài chính.</p>
+                  <p className="font-semibold">❓ Có hỗ trợ trả góp không?</p>
+                  <p>Có hỗ trợ trả góp qua thẻ tín dụng và công ty tài chính.</p>
                 </div>
                 <div>
-                <p className="font-semibold">❓ Bao lâu thì nhận được hàng?</p>
-                <p>Thông thường từ 1–3 ngày làm việc tùy khu vực.</p>
+                  <p className="font-semibold">❓ Bao lâu thì nhận được hàng?</p>
+                  <p>Thông thường từ 1–3 ngày làm việc tùy khu vực.</p>
                 </div>
-            </div>
+              </div>
             )}
-            {tab==='warranty' && (
-            <div className="text-gray-700 leading-relaxed space-y-4">
+            {tab === 'warranty' && (
+              <div className="text-gray-700 leading-relaxed space-y-4">
                 <p>
-                Tất cả sản phẩm đều được bảo hành chính hãng trong vòng 12 tháng, áp dụng theo chính sách của nhà sản xuất. Trung tâm bảo hành có mặt trên toàn quốc.
+                  Tất cả sản phẩm đều được bảo hành chính hãng trong vòng 12 tháng, áp dụng theo chính sách của nhà sản xuất. Trung tâm bảo hành có mặt trên toàn quốc.
                 </p>
                 <ul className="list-disc pl-5">
-                <li>Hỗ trợ đổi mới trong 7–30 ngày đầu nếu lỗi kỹ thuật</li>
-                <li>Bảo hành phần cứng, pin, sạc theo quy định của hãng</li>
-                <li>Miễn phí công sửa chữa trong thời gian bảo hành</li>
+                  <li>Hỗ trợ đổi mới trong 7–30 ngày đầu nếu lỗi kỹ thuật</li>
+                  <li>Bảo hành phần cứng, pin, sạc theo quy định của hãng</li>
+                  <li>Miễn phí công sửa chữa trong thời gian bảo hành</li>
                 </ul>
                 <p>Quý khách vui lòng giữ hóa đơn và hộp sản phẩm để được hỗ trợ tốt nhất.</p>
-            </div>
+              </div>
             )}
 
           </div>
@@ -247,31 +222,36 @@ const ProductDetail = () => {
       </div>
       {/* Related products */}
       <div className="container mx-auto px-4 mt-12 mb-24">
-        <h2 className="text-2xl font-bold mb-6">Sản phẩm tương tự</h2>
+        <h2 className="text-2xl font-bold mb-6">Sản phẩm khác</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {relatedProducts.map(product => (
-            <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition flex flex-col">
-              <img src={product.image} alt={product.name} className="h-40 mx-auto object-contain" />
+          {otherProducts.map(item => (
+            <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition flex flex-col">
+              <img src={item.image} alt={item.name} className="h-40 mx-auto object-contain" />
               <div className="p-4 flex-1 flex flex-col">
-                <h3 className="font-semibold text-gray-800 text-base mb-2 line-clamp-2">{product.name}</h3>
+                <h3 className="font-semibold text-gray-800 text-base mb-2 line-clamp-2">{item.name}</h3>
                 <div className="flex items-center mb-2">
-                  <span className="text-lg font-bold text-red-600 mr-2">{product.price}</span>
-                  <span className="text-sm text-gray-400 line-through">{product.originalPrice}</span>
+                  <span className="text-lg font-bold text-red-600 mr-2">{item.price}</span>
+                  <span className="text-sm text-gray-400 line-through">{item.originalPrice}</span>
                 </div>
                 <div className="flex items-center mb-2">
-                  {[1,2,3,4,5].map(i => <StarFilled key={i} className={i <= Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-200'} />)}
-                  <span className="ml-2 text-gray-600">{product.rating.toFixed(1)}</span>
+                  {[1, 2, 3, 4, 5].map(i => <StarFilled key={i} className={i <= Math.floor(item.rating) ? 'text-yellow-400' : 'text-gray-200'} />)}
+                  <span className="ml-2 text-gray-600">{item.rating.toFixed(1)}</span>
                 </div>
-                <button className="mt-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 px-4 text-sm font-medium transition">Xem chi tiết</button>
+                <button
+                  onClick={() => navigate(`/product/${item.id}`)}
+                  className="mt-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 px-4 text-sm font-medium transition"
+                >
+                  Xem chi tiết
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
       {/* Back to top & chat support */}
-      <BackToTopButton showBackToTop={showBackToTop} scrollToTop={scrollToTop} />
-      <ChatSupportButton onClick={() => setChatVisible(true)} />
-      <ChatSupportDrawer open={chatVisible} onClose={() => setChatVisible(false)} />
+      <BackToTopButton />
+      <ChatSupport />
     </div>
   );
 };

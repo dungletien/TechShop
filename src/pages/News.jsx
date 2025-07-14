@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
 import newsIphone from '../assets/images/news/iphone.png';
 import newsLaptop from '../assets/images/news/laptop.jpg';
 import newsWatch from '../assets/images/news/watch.jpg';
 import newsTablet from '../assets/images/news/tablet.jpg';
-import ChatSupportDrawer from '../components/ChatSupportDrawer';
-import ChatSupportButton from '../components/ChatSupportButton';
+import ChatSupport from '../components/ChatSupport';
 import BackToTopButton from '../components/BackToTopButton';
+import Breadcrumb from "../components/Breadcrumb";
 
 const newsList = [
   {
@@ -41,27 +40,15 @@ const newsList = [
 ];
 
 const News = () => {
-  const [chatVisible, setChatVisible] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  React.useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 300);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
+  const breadcrumbItems = [
+    { label: 'Trang chủ', path: '/' },
+    { label: 'Tin tức', path: null }
+];
   return (
     <div className="min-h-screen bg-gray-50 pb-16 pt-4 md:pt-6 ">
-      
         {/* Breadcrumb */}
-        <nav className="container mx-auto px-4 mb-4 text-sm text-gray-500" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2">
-            <li><Link to="/" className="hover:text-blue-600 font-medium">Trang chủ</Link></li>
-            <li>/</li>
-            <li className="text-gray-700 font-semibold">Tin tức</li>
-          </ol>
-        </nav>
+        <Breadcrumb items={breadcrumbItems} />
+
         <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center">Tin tức công nghệ</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {newsList.map(news => (
@@ -76,9 +63,8 @@ const News = () => {
             </div>
           ))}
         </div>
-      <BackToTopButton showBackToTop={showBackToTop} scrollToTop={scrollToTop} />
-      <ChatSupportButton onClick={() => setChatVisible(true)} />
-      <ChatSupportDrawer open={chatVisible} onClose={() => setChatVisible(false)} />
+      <BackToTopButton/>
+      <ChatSupport />
     </div>
   );
 };

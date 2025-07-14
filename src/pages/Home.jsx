@@ -1,9 +1,7 @@
 import React from "react";
-import { Button, Badge, Form, Input, Drawer } from "antd";
+import { Button, Badge} from "antd";
 import {
-    ShoppingCartOutlined,
-    ArrowUpOutlined,
-    MessageOutlined,
+    ShoppingCartOutlined
 } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
@@ -14,20 +12,13 @@ import "swiper/css/navigation";
 import heroBanner from "../assets/images/hero-banner2.jpg";
 import heroBanner1 from "../assets/images/hero-banner1.jpg";
 import BackToTopButton from '../components/BackToTopButton';
-import ChatSupportButton from '../components/ChatSupportButton';
-import ChatSupportDrawer from '../components/ChatSupportDrawer';
+import ChatSupport from '../components/ChatSupport';
 
 const Home = ({
     categories,
     bestSellers,
     newProducts,
     addToCart,
-    showBackToTop,
-    scrollToTop,
-    setChatVisible,
-    visible,
-    setVisible,
-    chatVisible,
 }) => {
     return (
         <div className="min-h-screen bg-gray-50">
@@ -286,49 +277,11 @@ const Home = ({
             </section>
 
             {/* Back to top button */}
-            <BackToTopButton showBackToTop={showBackToTop} scrollToTop={scrollToTop} />
+            <BackToTopButton/>
 
             {/* Chat support button */}
-            <ChatSupportButton onClick={() => setChatVisible(true)} />
-            {/* Chat support drawer */}
-            <ChatSupportDrawer open={chatVisible} onClose={() => setChatVisible(false)} />
+            <ChatSupport />
 
-            {/* Promotion popup */}
-            <Drawer
-                title="Ưu Đãi Đặc Biệt"
-                placement="right"
-                onClose={() => setVisible(false)}
-                open={visible}
-                width={400}
-            >
-                <div className="text-center">
-                    <div className="mb-6 text-red-600 text-5xl">
-                        <i className="fas fa-gift"></i>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4">
-                        Giảm 15% cho đơn hàng đầu tiên
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                        Đăng ký tài khoản ngay hôm nay để nhận mã giảm giá 15%
-                        cho đơn hàng đầu tiên của bạn.
-                    </p>
-                    <Form layout="vertical">
-                        <Form.Item label="Email của bạn">
-                            <Input placeholder="Nhập email của bạn" />
-                        </Form.Item>
-                        <Button
-                            type="primary"
-                            block
-                            className="!rounded-button bg-blue-600 hover:bg-blue-700 border-none mt-4 whitespace-nowrap cursor-pointer"
-                        >
-                            Nhận mã giảm giá
-                        </Button>
-                    </Form>
-                    <div className="mt-6 text-sm text-gray-500">
-                        * Áp dụng cho đơn hàng từ 500.000₫
-                    </div>
-                </div>
-            </Drawer>
         </div>
     );
 };
