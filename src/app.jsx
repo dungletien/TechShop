@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -20,22 +20,6 @@ import { CartProvider } from './components/CartContext';
 function App() {
   const [searchValue, setSearchValue] = useState('');
   const [cartCount, setCartCount] = useState(0);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [chatVisible, setChatVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 300);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const addToCart = () => {
     setCartCount(prev => prev + 1);
@@ -62,12 +46,6 @@ function App() {
                     bestSellers={bestSellers}
                     newProducts={newProducts}
                     addToCart={addToCart}
-                    showBackToTop={showBackToTop}
-                    scrollToTop={scrollToTop}
-                    setChatVisible={setChatVisible}
-                    visible={visible}
-                    setVisible={setVisible}
-                    chatVisible={chatVisible}
                   />
                 } />
                 <Route path="/products" element={<ProductList />} />
