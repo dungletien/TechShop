@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Dropdown, Menu, message } from 'antd';
+import { Input, Dropdown, Menu} from 'antd';
 import { ShoppingCartOutlined, UserOutlined, SearchOutlined, MenuOutlined, CloseOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import CartDrawer from './CartDrawer';
@@ -12,11 +12,8 @@ const Header = ({ searchValue, setSearchValue }) => {
   const navigate = useNavigate();
 
   const handleMenuClick = ({ key }) => {
-    if (key === 'orders') navigate('/orders');
-    else if (key === 'account') navigate('/account');
-    else if (key === 'logout') {
-      message.success('Đã đăng xuất!');
-      navigate('/');
+    if (key === 'logout') {
+      navigate('/login');
     }
   };
 

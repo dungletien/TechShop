@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import {
     PhoneOutlined,
     MailOutlined,
@@ -12,33 +11,19 @@ import {
 } from "@ant-design/icons";
 import ContactForm from "../components/ContactForm";
 import contactBanner from "../assets/images/banner/contactBanner.jpg";
-import ChatSupportDrawer from '../components/ChatSupportDrawer';
-import ChatSupportButton from '../components/ChatSupportButton';
-import BackToTopButton from '../components/BackToTopButton';
+import BackToTopButton from "../components/BackToTopButton";
+import ChatSupport from "../components/ChatSupport";
+import Breadcrumb from "../components/Breadcrumb";
 
 const ContactPage = () => {
-    const [chatVisible, setChatVisible] = useState(false);
-    const [showBackToTop, setShowBackToTop] = useState(false);
-
-    React.useEffect(() => {
-        const handleScroll = () => setShowBackToTop(window.scrollY > 300);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-    const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
+    const breadcrumbItems = [
+        { label: "Trang chủ", path: "/" },
+        { label: "Liên hệ", path: null },
+    ];
     return (
         <div className="bg-gray-50 min-h-screen pb-16 pt-4 md:pt-6">
             {/* Breadcrumb */}
-            <nav className="container mx-auto px-4 mb-4 text-sm text-gray-500" aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2">
-                    <li>
-                        <Link to="/" className="hover:text-blue-600 font-medium">Trang chủ</Link>
-                    </li>
-                    <li>/</li>
-                    <li className="text-gray-700 font-semibold">Liên hệ</li>
-                </ol>
-            </nav>
+            <Breadcrumb items={breadcrumbItems} />
 
             {/* Hero Banner */}
             <section className="relative">
@@ -58,7 +43,9 @@ const ContactPage = () => {
                                 Liên Hệ Với Chúng Tôi
                             </h1>
                             <p className="text-base md:text-lg text-white/80 leading-relaxed mb-6">
-                                Chúng tôi luôn sẵn sàng hỗ trợ bạn. Hãy liên hệ với chúng tôi qua các kênh bên dưới hoặc gửi tin nhắn trực tiếp.
+                                Chúng tôi luôn sẵn sàng hỗ trợ bạn. Hãy liên hệ
+                                với chúng tôi qua các kênh bên dưới hoặc gửi tin
+                                nhắn trực tiếp.
                             </p>
                         </div>
                     </div>
@@ -69,20 +56,23 @@ const ContactPage = () => {
             <div className="container mx-auto px-4 mt-8">
                 <div className="flex flex-col lg:flex-row gap-8 mb-12">
                     {/* Contact Info */}
-                    {/* Contact Info */}
                     <div className="flex flex-col gap-6 lg:w-2/5 h-full">
                         <div className="grid grid-cols-1 gap-6 h-full">
                             {/* Phone */}
                             <div className="bg-white rounded-md border-t-4 border-blue-500 p-6 shadow hover:shadow-md transition flex-1">
                                 <div className="text-center">
                                     <PhoneOutlined className="text-3xl text-blue-500 mb-3" />
-                                    <h4 className="text-lg font-semibold mb-2">Gọi Cho Chúng Tôi</h4>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Gọi Cho Chúng Tôi
+                                    </h4>
                                     <p className="text-gray-600 mb-2">
-                                        <a href="tel:+842812345678" className="text-blue-600 hover:underline">
+                                        <a
+                                            href="tel:+842812345678"
+                                            className="text-blue-600 hover:underline"
+                                        >
                                             (+84) 28 1234 5678
                                         </a>
                                     </p>
-
                                 </div>
                             </div>
 
@@ -90,14 +80,17 @@ const ContactPage = () => {
                             <div className="bg-white rounded-md border-t-4 border-blue-500 p-6 shadow hover:shadow-md transition flex-1">
                                 <div className="text-center">
                                     <MailOutlined className="text-3xl text-blue-500 mb-3" />
-                                    <h4 className="text-lg font-semibold mb-2">Email</h4>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Email
+                                    </h4>
                                     <p className="text-gray-600 mb-2">
-                                        <a href="mailto:info@yourstore.com" className="text-blue-600 hover:underline">
+                                        <a
+                                            href="mailto:info@yourstore.com"
+                                            className="text-blue-600 hover:underline"
+                                        >
                                             info@yourstore.com
                                         </a>
                                     </p>
-
-
                                 </div>
                             </div>
 
@@ -105,12 +98,14 @@ const ContactPage = () => {
                             <div className="bg-white rounded-md border-t-4 border-blue-500 p-6 shadow hover:shadow-md transition flex-1">
                                 <div className="text-center">
                                     <EnvironmentOutlined className="text-3xl text-blue-500 mb-3" />
-                                    <h4 className="text-lg font-semibold mb-2">Địa Chỉ</h4>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Địa Chỉ
+                                    </h4>
                                     <p className="text-gray-600 mb-2">
-                                        123 Lê Trọng Tấn, Thanh Xuân<br />
+                                        123 Lê Trọng Tấn, Thanh Xuân
+                                        <br />
                                         Hà Nội, Việt Nam
                                     </p>
-
                                 </div>
                             </div>
 
@@ -118,19 +113,41 @@ const ContactPage = () => {
                             <div className="bg-white rounded-md border-t-4 border-blue-500 p-6 shadow hover:shadow-md transition flex-1">
                                 <div className="text-center">
                                     <ThunderboltOutlined className="text-3xl text-blue-500 mb-3" />
-                                    <h4 className="text-lg font-semibold mb-2">Kết Nối Với Chúng Tôi</h4>
+                                    <h4 className="text-lg font-semibold mb-2">
+                                        Kết Nối Với Chúng Tôi
+                                    </h4>
                                     <div className="flex justify-center space-x-6 mb-3">
-                                        <a href="#" className="text-blue-600 hover:text-blue-800">
-                                            <FacebookFilled style={{ fontSize: '28px' }} />
+                                        <a
+                                            href="!"
+                                            className="text-blue-600 hover:text-blue-800"
+                                        >
+                                            <FacebookFilled
+                                                style={{ fontSize: "28px" }}
+                                            />
                                         </a>
-                                        <a href="#" className="text-blue-400 hover:text-blue-600">
-                                            <TwitterCircleFilled style={{ fontSize: '28px' }} />
+                                        <a
+                                            href="!"
+                                            className="text-blue-400 hover:text-blue-600"
+                                        >
+                                            <TwitterCircleFilled
+                                                style={{ fontSize: "28px" }}
+                                            />
                                         </a>
-                                        <a href="#" className="text-pink-600 hover:text-pink-800">
-                                            <InstagramFilled style={{ fontSize: '28px' }} />
+                                        <a
+                                            href="!"
+                                            className="text-pink-600 hover:text-pink-800"
+                                        >
+                                            <InstagramFilled
+                                                style={{ fontSize: "28px" }}
+                                            />
                                         </a>
-                                        <a href="#" className="text-red-600 hover:text-red-800">
-                                            <YoutubeFilled style={{ fontSize: '28px' }} />
+                                        <a
+                                            href="!"
+                                            className="text-red-600 hover:text-red-800"
+                                        >
+                                            <YoutubeFilled
+                                                style={{ fontSize: "28px" }}
+                                            />
                                         </a>
                                     </div>
                                 </div>
@@ -155,6 +172,7 @@ const ContactPage = () => {
                             width="100%"
                             height="450"
                             style={{ border: 0 }}
+                            title="Google Map"
                             allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
@@ -162,10 +180,9 @@ const ContactPage = () => {
                     </div>
                 </div>
             </div>
-            
-            <BackToTopButton showBackToTop={showBackToTop} scrollToTop={scrollToTop} />
-            <ChatSupportButton onClick={() => setChatVisible(true)} />
-            <ChatSupportDrawer open={chatVisible} onClose={() => setChatVisible(false)} />
+
+            <BackToTopButton />
+            <ChatSupport />
         </div>
     );
 };
