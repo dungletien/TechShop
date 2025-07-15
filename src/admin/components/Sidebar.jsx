@@ -1,56 +1,89 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
-import { 
-  DashboardOutlined, 
-  ShoppingOutlined, 
-  UserOutlined, 
-  FileTextOutlined, 
-  SettingOutlined,
-  ShoppingCartOutlined
-} from '@ant-design/icons';
-import { menuItems } from '../data/products';
+import React from "react";
+import { Layout, Menu } from "antd";
+import {
+  DashboardOutlined,
+  ShoppingOutlined,
+  UserOutlined,
+  FileTextOutlined,
+  ShoppingCartOutlined,
+  ShopOutlined,
+} from "@ant-design/icons";
 
 const { Sider } = Layout;
 
 const Sidebar = ({ collapsed, selectedKey, onMenuClick }) => {
-  const getIcon = (iconName) => {
-    const icons = {
-      DashboardOutlined: <DashboardOutlined />,
-      ShoppingOutlined: <ShoppingOutlined />,
-      UserOutlined: <UserOutlined />,
-      FileTextOutlined: <FileTextOutlined />,
-      SettingOutlined: <SettingOutlined />,
-      ShoppingCartOutlined: <ShoppingCartOutlined />
-    };
-    return icons[iconName] || null;
-  };
-
-  const menuItemsWithIcons = menuItems.map(item => ({
-    ...item,
-    icon: getIcon(item.icon)
-  }));
-
   return (
-    <Sider 
-      trigger={null} 
-      collapsible 
+    <Sider
+      collapsible
       collapsed={collapsed}
-      className="bg-white border-r border-gray-200"
+      trigger={null}
+      style={{
+        minHeight: "100vh",
+        background: "#001529",
+        boxShadow: "2px 0 8px rgba(0,0,0,0.15)",
+      }}
     >
-      <div className="p-4 border-b border-gray-200">
-        <h1 className={`text-xl font-bold text-blue-600 ${collapsed ? 'text-center' : ''}`}>
-          {collapsed ? 'AD' : 'Admin Panel'}
-        </h1>
+      {/* Logo / Tiêu đề */}
+      <div
+        style={{
+          height: 64,
+          margin: 16,
+          background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+          borderRadius: 8,
+          color: "#fff",
+          fontWeight: "bold",
+          fontSize: collapsed ? 20 : 22,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+          transition: "all 0.3s",
+        }}
+      >
+        <ShopOutlined
+          style={{ marginRight: collapsed ? 0 : 8, fontSize: 22 }}
+        />
+        {!collapsed && "TechShop"}
       </div>
+
       <Menu
+        theme="dark"
         mode="inline"
         selectedKeys={[selectedKey]}
-        items={menuItemsWithIcons}
-        onClick={onMenuClick}
-        className="border-0"
+        onClick={(e) => onMenuClick(e.key)}
+        style={{
+          fontSize: 16,
+        }}
+        items={[
+          {
+            key: "dashboard",
+            icon: <DashboardOutlined style={{ fontSize: 18 }} />,
+            label: "Bảng điều khiển",
+          },
+          {
+            key: "products",
+            icon: <ShoppingOutlined style={{ fontSize: 18 }} />,
+            label: "Sản phẩm",
+          },
+          {
+            key: "orders",
+            icon: <ShoppingCartOutlined style={{ fontSize: 18 }} />,
+            label: "Đơn hàng",
+          },
+          {
+            key: "customers",
+            icon: <UserOutlined style={{ fontSize: 18 }} />,
+            label: "Khách hàng",
+          },
+          {
+            key: "reports",
+            icon: <FileTextOutlined style={{ fontSize: 18 }} />,
+            label: "Báo cáo",
+          },
+        ]}
       />
     </Sider>
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

@@ -1,70 +1,52 @@
-import React, { useState } from 'react';
-import { Layout } from 'antd';
-import Sidebar from './components/Sidebar';
-import AdminHeader from './components/Header';
-import Dashboard from './components/Dashboard';
-import ProductsManagement from './components/ProductsManagement';
-import { 
-  OrdersManagement, 
-  CustomersManagement, 
-  ReportsPage, 
-  SettingsPage 
-} from './components/OtherPages';
-import { products } from './data/products';
+import React, { useState } from "react";
+import { Layout } from "antd";
+import Sidebar from "./components/Sidebar";
+import AdminHeader from "./components/Header";
+import Dashboard from "./components/Dashboard";
+import ProductsManagement from "./components/ProductsManagement";
+import OrdersManagement from "./components/OrdersManagement";
+import CustomersManagement from "./components/CustomersManagement";
+import ReportsPage from "./components/ReportsPage";
+import { products as initialProducts } from "./data/products";
 
 const { Content } = Layout;
 
-const Admin = () => {
+export default function AdminApp() {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState('dashboard');
-
-  const handleMenuClick = ({ key }) => {
-    setSelectedKey(key);
-  };
-
-  const handleToggleCollapse = () => {
-    setCollapsed(!collapsed);
-  };
+  const [selectedKey, setSelectedKey] = useState("dashboard");
+  const [products] = useState(initialProducts);
 
   const renderContent = () => {
     switch (selectedKey) {
-      case 'dashboard':
+      case "dashboard":
         return <Dashboard products={products} />;
-      case 'products':
-        return <ProductsManagement products={products} />;
-      case 'orders':
+      case "products":
+        return <ProductsManagement />;
+      case "orders":
         return <OrdersManagement />;
-      case 'customers':
+      case "customers":
         return <CustomersManagement />;
-      case 'reports':
+      case "reports":
         return <ReportsPage />;
-      case 'settings':
-        return <SettingsPage />;
       default:
         return <Dashboard products={products} />;
     }
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar 
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sidebar
         collapsed={collapsed}
         selectedKey={selectedKey}
-        onMenuClick={handleMenuClick}
+        onMenuClick={(key) => setSelectedKey(key)}
       />
-      
       <Layout>
-        <AdminHeader 
+        <AdminHeader
           collapsed={collapsed}
-          onToggleCollapse={handleToggleCollapse}
+          onToggleCollapse={() => setCollapsed(!collapsed)}
         />
-        
-        <Content className="m-6">
-          {renderContent()}
-        </Content>
+        <Content style={{ margin: "16px" }}>{renderContent()}</Content>
       </Layout>
     </Layout>
   );
-};
-
-export default Admin; 
+}
