@@ -14,6 +14,9 @@ import ContactPage from "./pages/ContactPage";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import MyOrders from "./pages/MyOrders";
+import OrderDetail from "./pages/OrderDetail";
+import AccountSettings from "./pages/AccountSettings";
 
 // 👨‍💻 Layout và trang admin
 import Admin from "./admin/Admin";
@@ -53,6 +56,9 @@ function UserLayout({ searchValue, setSearchValue, cartCount, addToCart }) {
         <Route path="/news" element={<News />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<MyOrders />} />
+        <Route path="/account" element={<AccountSettings />} />
+        <Route path="/orders/:id" element={<OrderDetail />} />
       </Routes>
       <Footer categories={categories} />
     </div>
