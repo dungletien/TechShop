@@ -1,21 +1,18 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message, Alert } from "antd";
+import { Form, Input, Button, message, Alert, Table } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-
-// 👉 import danh sách account mẫu
 import { accounts } from "../constants/accounts";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(""); // lưu lỗi để hiện Alert
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   const onFinish = (values) => {
     setLoading(true);
-    setErrorMsg(""); // reset lỗi cũ
+    setErrorMsg("");
 
-    // Tìm tài khoản khớp trong danh sách
     const found = accounts.find(
       (acc) => acc.email === values.email && acc.password === values.password
     );
@@ -25,26 +22,46 @@ const Login = () => {
 
       if (found) {
         message.success(`Đăng nhập thành công! Xin chào ${found.name}`);
-
-        // 🔹 LƯU THÔNG TIN USER VÀO LOCALSTORAGE
         localStorage.setItem("currentUser", JSON.stringify(found));
-
-        // 👉 Điều hướng theo role
         if (found.role === "admin") {
           navigate("/admin");
         } else {
-          navigate("/"); // hoặc trang nào bạn muốn
+          navigate("/");
         }
       } else {
-        // ❌ Sai tài khoản
         setErrorMsg("Email hoặc mật khẩu không đúng. Vui lòng thử lại!");
         message.error("Email hoặc mật khẩu không đúng!");
       }
     }, 800);
   };
 
+  // 👉 Chuẩn bị dữ liệu bảng
+  const columns = [
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Mật khẩu",
+      dataIndex: "password",
+      key: "password",
+    },
+    {
+      title: "Quyền",
+      dataIndex: "role",
+      key: "role",
+      render: (text) =>
+        text === "admin" ? (
+          <span className="text-red-500 font-semibold">Admin</span>
+        ) : (
+          <span className="text-green-600 font-semibold">User</span>
+        ),
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-indigo-100 to-pink-100 py-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-200 via-indigo-100 to-pink-100 py-8">
       <div className="bg-white/90 rounded-3xl shadow-2xl p-10 w-full max-w-md flex flex-col items-center">
         <div className="mb-6 flex flex-col items-center">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-3 shadow-lg">
@@ -55,7 +72,6 @@ const Login = () => {
           </h2>
         </div>
 
-        {/* Thông báo lỗi */}
         {errorMsg && (
           <Alert
             message={errorMsg}
@@ -116,6 +132,20 @@ const Login = () => {
             Đăng ký ngay
           </Link>
         </div>
+      </div>
+
+      {/* 👉 Hiển thị tài khoản mẫu */}
+      <div className="bg-white/90 rounded-3xl shadow-xl p-6 mt-8 w-full max-w-3xl">
+        <h3 className="text-xl font-bold mb-4 text-center text-gray-800">
+          📌 Tài khoản mẫu để đăng nhập nhanh
+        </h3>
+        <Table
+          columns={columns}
+          dataSource={accounts.map((acc, idx) => ({ ...acc, key: idx }))}
+          pagination={false}
+          bordered
+          className="rounded-lg overflow-hidden"
+        />
       </div>
     </div>
   );
